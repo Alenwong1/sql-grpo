@@ -1,0 +1,27 @@
+{
+  "top_2": {
+    "all_gold_tables_recall": 0.7900912646675359,
+    "avg_tables_kept": 3.226205997392438,
+    "questions": 1534
+  },
+  "top_3": {
+    "all_gold_tables_recall": 0.9080834419817471,
+    "avg_tables_kept": 4.269230769230769,
+    "questions": 1534
+  },
+  "top_4": {
+    "all_gold_tables_recall": 0.9530638852672751,
+    "avg_tables_kept": 5.020860495436767,
+    "questions": 1534
+  },
+  "top_5": {
+    "all_gold_tables_recall": 0.9810951760104303,
+    "avg_tables_kept": 5.661668839634942,
+    "questions": 1534
+  },
+  "top_6": {
+    "all_gold_tables_recall": 0.9915254237288136,
+    "avg_tables_kept": 6.185788787483703,
+    "questions": 1534
+  }
+}

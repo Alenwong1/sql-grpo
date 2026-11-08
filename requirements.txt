@@ -1,0 +1,13 @@
+torch>=2.6
+transformers>=5.0
+trl>=1.17
+peft>=0.21
+datasets>=5.0
+accelerate
+rank_bm25
+sqlglot
+httpx
+numpy
+pytest
+# GPU machine only:
+# vllm
