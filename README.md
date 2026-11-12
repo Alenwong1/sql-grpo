@@ -16,6 +16,8 @@ reward measures.
 | base, zero-shot | 24.3% | 31.7% | 13.2% | 13.2% | 16.5% | 54.8% |
 | + SFT (LoRA r=32, 2 epochs on BIRD train) | 48.8% | 56.3% | 38.7% | 32.6% | 34.6% | **69.2%** |
 | + GRPO (DAPO clip-higher, LoRA r=32, 300 steps) | **51.9%** | **59.5%** | **41.0%** | **38.2%** | **50.0%** | 61.1% |
+| + GRPO (original, sequence-normalised loss) | 50.2% | 58.4% | 38.4% | 35.4% | 48.5% | 61.9% |
+| + GRPO (Dr. GRPO, no length or std normalisation) | 49.2% | 57.2% | 38.0% | 34.0% | 47.3% | 62.6% |
 
 * SFT doubles execution accuracy (24.3% → 48.8%). GRPO with the execution-match reward adds 3.1 points on top,
   most of it on the challenging questions (+5.6).
@@ -25,8 +27,13 @@ reward measures.
 * GRPO used 2,400 training questions (8 samples each, about 45 s per step, 3.6 h). Mean training reward moved from
   about 0.52 to 0.63, noisily.
 
+* **Variant comparison (one seed each, same 300 steps from the same SFT checkpoint):** DAPO's token-level loss with
+  clip-higher is best (51.9%), the original GRPO loss is next (50.2%) and Dr. GRPO barely moves off SFT (49.2%).
+  The spread is 2.7 points on 1,532 questions, so the ordering needs more seeds before it is a claim. All three
+  show the same sharpening pattern (pass@1 up 13-15 points, pass@16 down 7-8).
+
 Every number is in `results/*.json`; the exact command sequence is `scripts/run_a800_40gb.sh`.
-Still to run: the other loss variants (`grpo_seq`, `dr_grpo` are in progress; `lite_ppo`, `gspo`), three seeds each,
+Still to run: the `lite_ppo` and `gspo` variants, three seeds each,
 the no-bonus reward ablation, and FP8 serving numbers.
 
 Practical notes from the run: prompts are capped at about 2,900 tokens by trimming column notes to a budget

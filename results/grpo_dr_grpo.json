@@ -1,0 +1,103 @@
+{
+  "model": "runs/grpo_dr_grpo/merged",
+  "split": "dev",
+  "n_questions": 1532,
+  "gold_failures": 2,
+  "backend": "vllm",
+  "quantization": null,
+  "EX": 0.49216710182767626,
+  "EX_by_difficulty": {
+    "simple": 0.5718918918918919,
+    "moderate": 0.3801295896328294,
+    "challenging": 0.3402777777777778
+  },
+  "greedy_seconds": 16.1,
+  "samples": [
+    {
+      "question_id": 0,
+      "pred": "```sql\nSELECT `Free Meal Count (K-12)` / `Enrollment (K-12)` FROM frpm WHERE `County Name` = 'Alameda' ORDER BY `Free Meal Count (K-12)` / `Enrollment (K-12)` DESC LIMIT 1\n```"
+    },
+    {
+      "question_id": 1,
+      "pred": "```sql\nSELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm ORDER BY `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` ASC LIMIT 3\n```"
+    },
+    {
+      "question_id": 2,
+      "pred": "```sql\nSELECT T1.Zip FROM schools AS T1 INNER JOIN fprm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.District = 'Fresno County Office of Education' AND T2.`Charter School (Y/N)` = 1\n```"
+    },
+    {
+      "question_id": 3,
+      "pred": "```sql\nSELECT MailStreet FROM schools ORDER BY `FRPM Count (K-12)` DESC LIMIT 1\n```"
+    },
+    {
+      "question_id": 4,
+      "pred": "```sql\nSELECT T1.Phone FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01'\n```"
+    },
+    {
+      "question_id": 5,
+      "pred": "```sql\nSELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.Virtual = 'F' AND T1.AvgScrMath > 400\n```"
+    },
+    {
+      "question_id": 6,
+      "pred": "```sql\nSELECT School FROM schools WHERE Magnet = 1 AND (NumTstTakr > 500 OR NumTstTakr IS NULL)\n```"
+    },
+    {
+      "question_id": 7,
+      "pred": "```sql\nSELECT T1.Phone FROM schools AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode WHERE T2.NumTstTakr > 1500 ORDER BY T2.NumTstTakr DESC LIMIT 1\n```"
+    },
+    {
+      "question_id": 8,
+      "pred": "```sql\nSELECT T1.NumTstTakr FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T2.`FRPM Count (K-12)` = ( SELECT MAX(`FRPM Count (K-12)`) FROM frpm )\n```"
+    },
+    {
+      "question_id": 9,
+      "pred": "```sql\nSELECT COUNT(T1.CDSCode) FROM schools AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode WHERE T1.FundingType = 'Directly funded' AND T2.AvgScrMath > 560\n```"
+    },
+    {
+      "question_id": 10,
+      "pred": "```sql\nSELECT T1.`FRPM Count (Ages 5-17)` FROM frpm AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode ORDER BY T2.AvgScrRead DESC LIMIT 1\n```"
+    },
+    {
+      "question_id": 11,
+      "pred": "```sql\nSELECT CDSCode FROM frpm WHERE `Enrollment (K-12)` + `Enrollment (Ages 5-17)` > 500\n```"
+    },
+    {
+      "question_id": 12,
+      "pred": "```sql\nSELECT MAX(T1.`Free Meal Count (Ages 5-17)`) / MAX(T1.`Enrollment (Ages 5-17)`) FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumGE1500 / T1.NumTstTakr > 0.3\n```"
+    },
+    {
+      "question_id": 13,
+      "pred": "```sql\nSELECT T1.Phone FROM schools AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode ORDER BY CAST(T2.NumGE1500 AS REAL) / T2.NumTstTakr DESC LIMIT 3\n```"
+    },
+    {
+      "question_id": 14,
+      "pred": "```sql\nSELECT NCESSchool FROM frpm ORDER BY `Enrollment (Ages 5-17)` DESC LIMIT 5\n```"
+    },
+    {
+      "question_id": 15,
+      "pred": "```sql\nSELECT T1.dname FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.StatusType = 'Active' ORDER BY T1.AvgScrRead DESC LIMIT 1\n```"
+    },
+    {
+      "question_id": 16,
+      "pred": "```sql\nSELECT COUNT(*) FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.NumTstTakr < 100\n```"
+    },
+    {
+      "question_id": 17,
+      "pred": "```sql\nSELECT T1.CharterNum FROM schools AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode WHERE T2.AvgScrWrite > 499 ORDER BY T2.AvgScrWrite DESC\n```"
+    },
+    {
+      "question_id": 18,
+      "pred": "```sql\nSELECT COUNT(*) FROM schools AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode WHERE T1.District = 'Fresno' AND T1.FundingType = 'Directly funded' AND T2.NumTstTakr <= 250\n```"
+    },
+    {
+      "question_id": 19,
+      "pred": "```sql\nSELECT T1.Phone FROM schools AS T1 INNER JOIN satscores AS T2 ON T2.cds = T1.CDSCode ORDER BY T2.AvgScrMath DESC LIMIT 1\n```"
+    }
+  ],
+  "pass@k": {
+    "pass@1": 0.4727888381201044,
+    "pass@4": 0.5615061831119273,
+    "pass@16": 0.6259791122715405
+  },
+  "temperature": 1.0
+}
