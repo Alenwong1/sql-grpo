@@ -36,7 +36,7 @@ class Generator:
         self.backend = "vllm" if use_vllm else "hf"
         if use_vllm:
             from vllm import LLM
-            self.llm = LLM(model=model, quantization=quantization, gpu_memory_utilization=0.85, max_model_len=6144)
+            self.llm = LLM(model=model, quantization=quantization, gpu_memory_utilization=0.85, max_model_len=8192)
         else:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer

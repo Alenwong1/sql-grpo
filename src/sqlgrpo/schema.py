@@ -82,16 +82,16 @@ def load_schema(db_path: str, n_examples: int = 3) -> tuple[Table, ...]:
     return tuple(tables)
 
 
-def render(tables: list[Table], with_examples: bool = True) -> str:
+def render(tables: list[Table], with_examples: bool = True, desc_chars: int = 200, n_examples: int = 3) -> str:
     parts = []
     for t in tables:
         lines = []
         for c in t.columns:
             comment = []
-            if c.description:
-                comment.append(c.description)
-            if with_examples and c.examples:
-                comment.append("e.g. " + ", ".join(c.examples))
+            if c.description and desc_chars:
+                comment.append(c.description[:desc_chars])
+            if with_examples and c.examples and n_examples:
+                comment.append("e.g. " + ", ".join(c.examples[:n_examples]))
             lines.append(f'  "{c.name}" {c.type}' + (f"  -- {'; '.join(comment)}" if comment else ""))
         if t.primary_keys:
             lines.append(f"  PRIMARY KEY ({', '.join(t.primary_keys)})")
@@ -99,6 +99,16 @@ def render(tables: list[Table], with_examples: bool = True) -> str:
             lines.append(f'  FOREIGN KEY ("{col}") REFERENCES "{rt}"("{rc}")')
         parts.append(f'CREATE TABLE "{t.name}" (\n' + ",\n".join(lines) + "\n);")
     return "\n\n".join(parts)
+
+
+def render_budget(tables: list[Table], max_chars: int = 7000) -> str:
+    """Render with as much column documentation as fits the prompt budget: full notes, then short
+    notes with one example value, then one example only, then bare DDL."""
+    for kw in (dict(), dict(desc_chars=60, n_examples=1), dict(desc_chars=0, n_examples=1), dict(desc_chars=0, n_examples=0)):
+        text = render(tables, **kw)
+        if len(text) <= max_chars:
+            return text
+    return text
 
 
 class SchemaRetriever:

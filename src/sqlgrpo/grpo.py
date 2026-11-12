@@ -81,6 +81,10 @@ def main(argv=None):
                           train_dataset=ds, peft_config=peft_cfg)
     trainer.train()
     trainer.save_model(a.out)
+    if a.lora_r:  # merged copy so vLLM can load it for evaluation and serving
+        merged = trainer.model.merge_and_unload()
+        merged.save_pretrained(a.out + "/merged")
+        trainer.processing_class.save_pretrained(a.out + "/merged")
 
 
 def _bf16() -> bool:

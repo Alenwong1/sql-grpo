@@ -22,12 +22,12 @@ import numpy as np
 from .data import build_dataset
 from .prompt import build_messages, extract_sql
 from .sandbox import execute
-from .schema import SchemaRetriever, load_schema, render
+from .schema import SchemaRetriever, load_schema, render_budget
 
 
 def ask(base_url: str, model: str, db: str, question: str, evidence: str = "", top_k: int = 5) -> dict:
     tables = SchemaRetriever(load_schema(db)).select(question, evidence, top_k)
-    msgs = build_messages(render(tables), question, evidence)
+    msgs = build_messages(render_budget(tables), question, evidence)
     t0 = time.perf_counter()
     r = httpx.post(f"{base_url}/v1/chat/completions", timeout=120,
                    json={"model": model, "messages": msgs, "temperature": 0, "max_tokens": 384})

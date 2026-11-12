@@ -12,7 +12,7 @@ import os
 from datasets import Dataset
 
 from .prompt import build_messages, target_message
-from .schema import SchemaRetriever, load_schema, render
+from .schema import SchemaRetriever, load_schema, render_budget
 
 SPLITS = {"train": ("train.json", "train_databases"), "dev": ("dev.json", "dev_databases")}
 
@@ -39,7 +39,7 @@ def build_dataset(root: str, split: str, limit: int | None = None, top_k_tables:
             retrievers[e["db_id"]] = SchemaRetriever(load_schema(path))
         tables = retrievers[e["db_id"]].select(e["question"], e.get("evidence", ""), top_k_tables)
         row = {
-            "prompt": build_messages(render(tables), e["question"], e.get("evidence", "")),
+            "prompt": build_messages(render_budget(tables), e["question"], e.get("evidence", "")),
             "db_path": path, "gold_sql": e["SQL"], "db_id": e["db_id"],
             "difficulty": e.get("difficulty", "unknown"), "question_id": e.get("question_id", len(rows)),
             "kept_tables": [t.name for t in tables],

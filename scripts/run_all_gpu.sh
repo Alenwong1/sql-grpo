@@ -9,21 +9,21 @@ export PYTHONPATH=src
 python -m sqlgrpo.evaluate --model "$MODEL" --n 16 --out results/base.json
 
 # 1. SFT (LoRA, merged so vLLM can load it)
-python -m sqlgrpo.sft --model "$MODEL" --out runs/sft --merge --report-to wandb
+python -m sqlgrpo.sft --model "$MODEL" --out runs/sft --merge --max-length 3584 --report-to wandb
 python -m sqlgrpo.evaluate --model runs/sft/merged --n 16 --out results/sft.json
 
 # 2. GRPO ablations from the SFT checkpoint, full fine-tuning, vLLM colocated for rollouts
 for V in grpo_seq dr_grpo dapo_cliphigher lite_ppo gspo; do
   python -m sqlgrpo.grpo --model runs/sft/merged --variant "$V" --out "runs/grpo_$V" \
-    --use-vllm --vllm-mem 0.35 --gradient-checkpointing --max-steps 500 --report-to wandb
-  python -m sqlgrpo.evaluate --model "runs/grpo_$V" --n 16 --out "results/grpo_$V.json"
+    --use-vllm --vllm-mem 0.25 --gradient-checkpointing --batch 4 --grad-accum 16 --lora-r 32 --lr 2e-5 --max-steps 300 --report-to wandb
+  python -m sqlgrpo.evaluate --model "runs/grpo_$V/merged" --n 16 --out "results/grpo_$V.json"
 done
 
 # 3. valid-SQL bonus ablation on the best variant
 python -m sqlgrpo.grpo --model runs/sft/merged --variant dapo_cliphigher --valid-bonus 0 \
-  --out runs/grpo_dapo_nobonus --use-vllm --gradient-checkpointing --max-steps 500
-python -m sqlgrpo.evaluate --model runs/grpo_dapo_nobonus --n 16 --out results/grpo_dapo_nobonus.json
+  --out runs/grpo_dapo_nobonus --use-vllm --vllm-mem 0.25 --gradient-checkpointing --batch 4 --grad-accum 16 --lora-r 32 --lr 2e-5 --max-steps 300
+python -m sqlgrpo.evaluate --model runs/grpo_dapo_nobonus/merged --n 16 --out results/grpo_dapo_nobonus.json
 
 # 4. quantised serving check (accuracy lost to FP8 + throughput)
-python -m sqlgrpo.evaluate --model runs/grpo_dapo_cliphigher --quantization fp8 --out results/grpo_dapo_fp8.json
+python -m sqlgrpo.evaluate --model runs/grpo_dapo_cliphigher/merged --quantization fp8 --out results/grpo_dapo_fp8.json
 python -m sqlgrpo.report results > results/RESULTS.md

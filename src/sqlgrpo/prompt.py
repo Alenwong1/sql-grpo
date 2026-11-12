@@ -31,7 +31,8 @@ def extract_sql(text: str) -> str | None:
     if blocks:
         sql = blocks[-1].strip()
     else:
-        m = re.search(r"\b(select|with)\b.*", text, re.I | re.S)
+        # a statement at the start of a line first; prose often contains the word "with"
+        m = re.search(r"^\s*(select|with)\b.*", text, re.I | re.S | re.M) or re.search(r"\bselect\b.*", text, re.I | re.S)
         if not m:
             return None
         sql = m.group(0).strip()
